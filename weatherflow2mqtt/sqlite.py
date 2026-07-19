@@ -326,10 +326,20 @@ class SQLFunctions:
             cursor = self.connection.cursor()
             cursor.execute("SELECT * FROM high_low;")
             table_data = cursor.fetchall()
+        except SQLError as e:
+            _LOGGER.error("Could not read High and Low data. Error: %s", e)
+            return False
+        except Exception as e:
+            _LOGGER.error("Could not read High and Low Table. Error message: %s", e)
+            return False
 
-            data = dict(sensor_data)
+        data = dict(sensor_data)
 
-            for row in table_data:
+        for row in table_data:
+            # Each row is handled independently - one sensor's failure must
+            # not prevent every other sensor's high/low and latest value
+            # from being updated this cycle.
+            try:
                 max_sql = None
                 min_sql = None
                 sensor_value = None
@@ -373,12 +383,18 @@ class SQLFunctions:
                         cursor.execute(sql)
                         self.connection.commit()
 
-        except SQLError as e:
-            _LOGGER.error("Could not update High and Low data. Error: %s", e)
-            return False
-        except Exception as e:
-            _LOGGER.error("Could not write to High and Low Table. Error message: %s", e)
-            return False
+            except SQLError as e:
+                _LOGGER.error(
+                    "Could not update High and Low data for sensor %s. Error: %s",
+                    row["sensorid"],
+                    e,
+                )
+            except Exception as e:
+                _LOGGER.error(
+                    "Could not write to High and Low Table for sensor %s. Error message: %s",
+                    row["sensorid"],
+                    e,
+                )
 
     def readHighLow(self):
         """Return data from the high_low table as JSON."""
