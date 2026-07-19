@@ -15,6 +15,7 @@ from math import ceil
 from typing import Any, Callable, OrderedDict
 
 from paho.mqtt.client import Client as MqttClient
+from paho.mqtt.enums import CallbackAPIVersion
 from pint import Quantity
 from pyweatherflowudp.client import EVENT_DEVICE_DISCOVERED, WeatherFlowListener
 from pyweatherflowudp.const import UNIT_METERS
@@ -583,7 +584,7 @@ class WeatherFlowMqtt:
         ) and self.mqtt_config.debug:
             _LOGGER.debug("MQTT Credentials not needed")
 
-        self.mqtt_client = client = MqttClient()
+        self.mqtt_client = client = MqttClient(CallbackAPIVersion.VERSION1)
 
         if not anonymous:
             client.username_pw_set(

@@ -1,6 +1,7 @@
 import datetime
 import json
 import logging
+import math
 import os.path
 import sqlite3
 import time
@@ -340,47 +341,58 @@ class SQLFunctions:
             # not prevent every other sensor's high/low and latest value
             # from being updated this cycle.
             try:
-                max_sql = None
-                min_sql = None
                 sensor_value = None
+                set_clauses = []
+                params = []
                 do_update = False
                 # Get Value of Sensor if available
                 if data.get(row["sensorid"]) is not None:
                     sensor_value = data[row["sensorid"]]
+                    if isinstance(sensor_value, (int, float)) and not math.isfinite(
+                        sensor_value
+                    ):
+                        # Reject NaN/Infinity rather than silently writing it
+                        # to the database - parameterized queries would bind
+                        # it successfully instead of erroring like the old
+                        # f-string SQL did, so this needs an explicit guard.
+                        _LOGGER.warning(
+                            "Ignoring non-finite value for sensor %s: %s",
+                            row["sensorid"],
+                            sensor_value,
+                        )
+                        sensor_value = None
 
                 # If we have a value, check if min/max changes
                 if sensor_value is not None:
                     if row["max_day"] is None or sensor_value > row["max_day"]:
-                        max_sql = (
-                            f" max_day = {sensor_value}, max_day_time = {time.time()} "
-                        )
+                        set_clauses += ["max_day = ?", "max_day_time = ?"]
+                        params += [sensor_value, time.time()]
                         do_update = True
                     if row["min_day"] is None or sensor_value < row["min_day"]:
-                        min_sql = (
-                            f" min_day = {sensor_value}, min_day_time = {time.time()} "
-                        )
+                        set_clauses += ["min_day = ?", "min_day_time = ?"]
+                        params += [sensor_value, time.time()]
                         do_update = True
 
                 # If min/max changes, update the record
-                sql = "UPDATE high_low SET"
                 if do_update:
-                    if max_sql:
-                        sql = f"{sql} {max_sql}"
-                    if max_sql and min_sql:
-                        sql = f"{sql},"
-                    if min_sql:
-                        sql = f"{sql} {min_sql}"
-                    sql = f"{sql}, latest = {sensor_value} WHERE sensorid = '{row['sensorid']}'"
+                    set_clauses.append("latest = ?")
+                    params.append(sensor_value)
+                    params.append(row["sensorid"])
+                    sql = f"UPDATE high_low SET {', '.join(set_clauses)} WHERE sensorid = ?"
                     if self._debug:
-                        _LOGGER.debug("Min/Max SQL: %s", sql)
-                    cursor.execute(sql)
+                        _LOGGER.debug("Min/Max SQL: %s | params: %s", sql, params)
+                    cursor.execute(sql, params)
                     self.connection.commit()
                 else:
                     if sensor_value is not None:
-                        sql = f"{sql} latest = {sensor_value} WHERE sensorid = '{row['sensorid']}'"
+                        sql = "UPDATE high_low SET latest = ? WHERE sensorid = ?"
                         if self._debug:
-                            _LOGGER.debug("Latest SQL: %s", sql)
-                        cursor.execute(sql)
+                            _LOGGER.debug(
+                                "Latest SQL: %s | params: %s",
+                                sql,
+                                (sensor_value, row["sensorid"]),
+                            )
+                        cursor.execute(sql, (sensor_value, row["sensorid"]))
                         self.connection.commit()
 
             except SQLError as e:
