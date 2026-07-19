@@ -1,6 +1,6 @@
 {
-    "name": "WeatherFlow to MQTT (Ridgeway fork)",
-    "description": "WeatherFlow to MQTT for Home Assistant - self-hosted fork with High/Low table NoneType fix (upstream archived/unmaintained)",
+    "name": "WeatherFlow to MQTT (Fixed Fork)",
+    "description": "WeatherFlow to MQTT for Home Assistant - community fork of briis/hass-weatherflow2mqtt (archived/unmaintained) with a fix for the High/Low table NoneType crash",
     "slug": "weatherflow2mqtt",
     "url": "https://github.com/Vatoe/hass-weatherflow2mqtt",
     "version": "3.2.2-fix1",

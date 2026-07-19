@@ -4,6 +4,13 @@
 
 [![Open your Home Assistant instance and show the add add-on repository dialog with a specific repository URL pre-filled.](https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Fbriis%2Fhass-weatherflow2mqtt)
 
+## About this fork
+
+This is a fork of [briis/hass-weatherflow2mqtt](https://github.com/briis/hass-weatherflow2mqtt) by [Bjarne Riis](https://github.com/briis) — all credit for the original add-on goes to him. The upstream repo is archived and no longer maintained (see the "BREAKING Announcement" below, where the original author explicitly invites forks: *"Fell free to make a Fork of it, and continue making enhancements"*).
+
+This fork adds one fix: `weatherflow2mqtt/sqlite.py`'s `updateHighLow()` compared a new sensor reading against a stored high/low value without guarding against that stored value being `NULL` in the database (e.g. for a freshly-added sensor), which threw a `TypeError` that silently aborted high/low **and "latest" value** updates for every sensor on that report cycle — not just the affected one. The fix is self-healing; no manual database changes needed. Also bumped the Dockerfile's base image (`python:3.11-slim-buster` → `slim-bookworm`) since Debian 10's package repos are no longer served, which was blocking builds entirely.
+
+Everything else below is the original upstream documentation, unchanged.
 
 ## BREAKING Announcement
 
