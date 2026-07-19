@@ -10,21 +10,20 @@ This is a fork of [briis/hass-weatherflow2mqtt](https://github.com/briis/hass-we
 
 This fork adds one fix: `weatherflow2mqtt/sqlite.py`'s `updateHighLow()` compared a new sensor reading against a stored high/low value without guarding against that stored value being `NULL` in the database (e.g. for a freshly-added sensor), which threw a `TypeError` that silently aborted high/low **and "latest" value** updates for every sensor on that report cycle — not just the affected one. The fix is self-healing; no manual database changes needed. Also bumped the Dockerfile's base image (`python:3.11-slim-buster` → `slim-bookworm`) since Debian 10's package repos are no longer served, which was blocking builds entirely.
 
-Everything else below is the original upstream documentation, unchanged.
+Everything else below is the original upstream documentation, with one light copy-edit: the "BREAKING Announcement" section had a misspelling (ARCHIEVED → ARCHIVED) and mixed past/future tense left over from being written before the archival actually happened — corrected to reflect that it's now a completed, past event. No factual content was changed.
 
 ## BREAKING Announcement
 
 As there is now a `Home Assistant Core` integration for WeatherFlow which uses the UDP API, I had to make a [new Integration](https://github.com/briis/weatherflow_forecast) that uses the REST API, with a different name (WeatherFlow Forecast). The new integration is up-to-date with the latest specs for how to create a Weather Forecast, and also gives the option to only add the Forecast, and no additional sensors. 
 
-Therefore this Add-On will be marked as **ARCHIEVED** and will no longer be maintained by me. Fell free to make a Fork of it, and continue making enhancements.
+Therefore this Add-On was marked as **ARCHIVED** and is no longer maintained by the original author. Feel free to make a Fork of it, and continue making enhancements.
 
-There is no *Weather Entity* in Home Assistant for MQTT, so after attributes are deprecated in Home Assistant 2024.3, there is no option to add the Forecast to Home Assistant.
-As a consequence of that, I have decided to remove the ability for this Add-On to add Forecast data to MQTT and Home Assistant. This Add-On will still be maintained, but just without the option of a Forecast - meaning it will be 100% local.
+There was no *Weather Entity* in Home Assistant for MQTT, so after attributes were deprecated in Home Assistant 2024.3, there was no option to add the Forecast to Home Assistant.
+As a consequence of that, the original author removed the ability for this Add-On to add Forecast data to MQTT and Home Assistant, and the Add-On continued to be maintained for a period afterward without the option of a Forecast — meaning it was 100% local — before ultimately being archived, as noted above.
 If you want the forecast in combination with this Add-On, install the new integration mentioned above, just leave the *Add sensors* box unchecked.
 
 ## Overview
 
-There is not an exact date for when this will happen, but it will be before end of February 2024.
 This project monitors the UDP socket (50222) from a WeatherFlow Hub, and publishes the data to a MQTT Server. Data is formatted in a way that, it supports the [MQTT Discovery](https://www.home-assistant.io/docs/mqtt/discovery/) format for Home Assistant, so a sensor will created for each entity that WeatherFlow sends out, if you have MQTT Discovery enabled.
 
 Everything runs in a pre-built Docker Container, so installation is very simple. You only need Docker installed on a computer and a MQTT Server setup somewhere in your network. If you run either the Operating System or Supervised installation of Home Assistant, you will have easy access to both.
