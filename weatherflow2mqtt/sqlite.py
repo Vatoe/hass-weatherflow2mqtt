@@ -340,12 +340,12 @@ class SQLFunctions:
 
                 # If we have a value, check if min/max changes
                 if sensor_value is not None:
-                    if sensor_value > row["max_day"]:
+                    if row["max_day"] is None or sensor_value > row["max_day"]:
                         max_sql = (
                             f" max_day = {sensor_value}, max_day_time = {time.time()} "
                         )
                         do_update = True
-                    if sensor_value < row["min_day"]:
+                    if row["min_day"] is None or sensor_value < row["min_day"]:
                         min_sql = (
                             f" min_day = {sensor_value}, min_day_time = {time.time()} "
                         )
