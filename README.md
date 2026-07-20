@@ -1,6 +1,8 @@
 # WeatherFlow-2-MQTT for Home Assistant
 
-![](https://img.shields.io/docker/v/briis/weatherflow2mqtt/latest?style=flat-square) ![](https://img.shields.io/docker/pulls/briis/weatherflow2mqtt?style=flat-square) [![](https://img.shields.io/badge/COMMUNITY-FORUM-success?style=flat-square)](https://community.weatherflow.com/t/weatherflow2mqtt-for-home-assistant/13718) [![](https://img.shields.io/discord/918948431714738257)](https://discord.gg/n5nw8QXM8b)
+[![Tests](https://github.com/Vatoe/hass-weatherflow2mqtt/actions/workflows/test.yml/badge.svg)](https://github.com/Vatoe/hass-weatherflow2mqtt/actions/workflows/test.yml) [![](https://img.shields.io/badge/COMMUNITY-FORUM-success?style=flat-square)](https://community.weatherflow.com/t/weatherflow2mqtt-for-home-assistant/13718)
+
+> The original Docker Hub version/pulls badges and Discord chat badge from upstream's README have been removed here - they pointed at `briis/weatherflow2mqtt` on Docker Hub (frozen at 3.2.2 forever, since this fork doesn't publish there) and a Discord invite that no longer resolves. Replaced with a live CI status badge for this fork instead.
 
 [![Open your Home Assistant instance and show the add add-on repository dialog with a specific repository URL pre-filled.](https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2FVatoe%2Fhass-weatherflow2mqtt)
 
