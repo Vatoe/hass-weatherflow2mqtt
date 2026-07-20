@@ -2,14 +2,19 @@
 
 All notable changes to this project will be documented in this file. 
 
-## [3.2.3] - 2026-07-20
+## [3.2.4] - 2026-07-20
 
 ### Changes (fork - github.com/Vatoe/hass-weatherflow2mqtt)
 
-- Fixed `writePressure()` interpolating live sensor values directly into SQL text (same bug class as the High/Low table crash below) - parameterized query + non-finite (NaN/Infinity) guard added
 - Bumped `pytest` 4.4.1 -> 9.0.3 in test tooling (fixes CVE-2025-71176, insecure tmpdir handling)
 - Added CI (GitHub Actions) to run the test suite automatically on every push
 - Extended test coverage to the rest of `sqlite.py` - storage/pressure/lightning/day_data tables, database lifecycle (create/upgrade/seed), and `dailyHousekeeping()`'s rollover logic (34 additional tests)
+
+## [3.2.3] - 2026-07-20
+
+### Changes (fork)
+
+- Fixed `writePressure()` interpolating live sensor values directly into SQL text (same bug class as the High/Low table crash below) - parameterized query + non-finite (NaN/Infinity) guard added
 
 ## [3.2.2-fix4] - 2026-07-20
 
