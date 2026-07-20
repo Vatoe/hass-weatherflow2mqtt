@@ -2,6 +2,43 @@
 
 All notable changes to this project will be documented in this file. 
 
+## [3.2.3] - 2026-07-20
+
+### Changes (fork - github.com/Vatoe/hass-weatherflow2mqtt)
+
+- Fixed `writePressure()` interpolating live sensor values directly into SQL text (same bug class as the High/Low table crash below) - parameterized query + non-finite (NaN/Infinity) guard added
+- Bumped `pytest` 4.4.1 -> 9.0.3 in test tooling (fixes CVE-2025-71176, insecure tmpdir handling)
+- Added CI (GitHub Actions) to run the test suite automatically on every push
+- Extended test coverage to the rest of `sqlite.py` - storage/pressure/lightning/day_data tables, database lifecycle (create/upgrade/seed), and `dailyHousekeeping()`'s rollover logic (34 additional tests)
+
+## [3.2.2-fix4] - 2026-07-20
+
+### Changes (fork)
+
+- Bumped `pyweatherflowudp` 1.4.2 -> 1.5.2 (the UDP-parsing library, still independently maintained even though this add-on isn't upstream) - validated by running every `calc.py` physics function against known-correct reference values before shipping
+
+## [3.2.2-fix3] - 2026-07-20
+
+### Changes (fork)
+
+- Bumped stale dependencies: `paho-mqtt` 1.6.1 -> 2.1.0, `aiohttp` 3.8.4 -> 3.14.1, `PyYAML`, `pytz`
+- Parameterized `updateHighLow()`'s SQL instead of interpolating live sensor values into SQL text, with a non-finite (NaN/Infinity) guard
+- Added the first test suite (`tests/`)
+
+## [3.2.2-fix2] - 2026-07-20
+
+### Changes (fork)
+
+- Isolated per-sensor failures in `updateHighLow()` - one sensor's bad data no longer aborts every other sensor's high/low and "latest" update in the same cycle, only its own
+
+## [3.2.2-fix1] - 2026-07-20
+
+### Changes (fork)
+
+- Forked from `briis/hass-weatherflow2mqtt` (archived/unmaintained since 2024-12-29) after the upstream "Could not write to High and Low Table" NoneType crash was confirmed as a known, permanently-unfixed bug
+- Fixed the crash at its root: `updateHighLow()` compared a sensor value against a `NULL` stored max/min without guarding against it, throwing a `TypeError` that silently aborted every sensor's update that cycle, not just the affected one - self-healing, no manual database changes needed
+- Bumped the Dockerfile base image `python:3.11-slim-buster` -> `slim-bookworm` (buster's Debian repos are no longer served, was blocking builds entirely)
+
 ## [3.2.2] - 2023-10-08
 
 ### BREAKING Announcement
