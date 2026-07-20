@@ -205,10 +205,17 @@ class SQLFunctions:
 
     def writePressure(self, pressure):
         """Add entry to the Pressure Table."""
+        if isinstance(pressure, (int, float)) and not math.isfinite(pressure):
+            # Same class of bug as updateHighLow() had - this value comes
+            # straight from the live sensor feed, not self-generated like
+            # the timestamp, so it needs the same non-finite guard.
+            _LOGGER.warning("Ignoring non-finite pressure value: %s", pressure)
+            return False
         try:
             cur = self.connection.cursor()
             cur.execute(
-                f"INSERT INTO pressure(timestamp, pressure) VALUES({time.time()}, {pressure});"
+                "INSERT INTO pressure(timestamp, pressure) VALUES(?, ?);",
+                (time.time(), pressure),
             )
             self.connection.commit()
             return True
