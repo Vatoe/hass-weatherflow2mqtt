@@ -96,6 +96,7 @@ class SQLFunctions:
             cursor.execute(f"SELECT * FROM storage WHERE id = {STORAGE_ID};")
             data = cursor.fetchall()
 
+            storage_json = {}
             for row in data:
                 storage_json = {
                     "rain_today": row[1],

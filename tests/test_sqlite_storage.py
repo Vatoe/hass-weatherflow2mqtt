@@ -49,3 +49,9 @@ def test_write_storage_updates_existing_row(sql):
     assert data["rain_today"] == 12.5
     assert data["lightning_count"] == 7
     assert data["last_lightning_distance"] == 12
+
+
+def test_read_storage_empty_table_does_not_raise(sql):
+    """SYS-22: no row for STORAGE_ID must not raise UnboundLocalError."""
+    data = sql.readStorage()
+    assert data == {}
