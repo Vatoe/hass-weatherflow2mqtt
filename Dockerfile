@@ -1,5 +1,5 @@
 FROM python:3.11-slim-bookworm
-LABEL org.opencontainers.image.source="https://github.com/briis/hass-weatherflow2mqtt"
+LABEL org.opencontainers.image.source="https://github.com/Vatoe/hass-weatherflow2mqtt"
 
 RUN mkdir -p /data
 WORKDIR /src/weatherflow2mqtt
