@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. 
 
+## [3.2.5] - 2026-10-21
+
+### Changes (fork - github.com/Vatoe/hass-weatherflow2mqtt)
+
+- The add-on now installs from a prebuilt multi-arch image (`ghcr.io/vatoe/hass-weatherflow2mqtt`: amd64, aarch64, armv7) instead of compiling on the device - faster, and no longer depends on the Debian mirrors being reachable at install time
+- New publish workflow builds and pushes the image tagged with the `version` in `config.json` (a version already published is never rebuilt)
+- `aiohttp` 3.14.3 -> 3.14.4 (fixes 3 open Dependabot alerts)
+
 ## [3.2.4] - 2026-07-20
 
 ### Changes (fork - github.com/Vatoe/hass-weatherflow2mqtt)
