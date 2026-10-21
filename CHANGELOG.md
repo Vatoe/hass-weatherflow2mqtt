@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. 
 
+## [3.2.6] - 2026-10-21
+
+### Changes (fork - github.com/Vatoe/hass-weatherflow2mqtt)
+
+- English `Rain Intensity` and `Precipitation Type` now report **"No Rain"** when it is dry. They previously reported the text "None", which Home Assistant's MQTT sensors treat as an empty value, so both showed `unknown` whenever it wasn't raining. Anything that tests for `none`/`unknown` should also accept `No Rain`.
+
 ## [3.2.5] - 2026-10-21
 
 ### Changes (fork - github.com/Vatoe/hass-weatherflow2mqtt)

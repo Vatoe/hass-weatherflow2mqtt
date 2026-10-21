@@ -72,13 +72,13 @@
         "none": "None"
     },
     "precip_type": {
-        "none": "None",
+        "none": "No Rain",
         "rain": "Rain",
         "hail": "Hail",
         "heavy-rain": "Heavy Rain"
     },
     "rain_intensity": {
-        "NONE": "None",
+        "NONE": "No Rain",
         "VERYLIGHT": "Very Light",
         "LIGHT": "Light",
         "MODERATE": "Moderate",
